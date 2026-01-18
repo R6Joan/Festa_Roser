@@ -1,0 +1,49 @@
+.feature-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 2rem;
+  padding: 0 clamp(1rem, 3vw, 1.5rem);
+}
+
+.feature-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 20px;
+  position: relative;
+}
+
+.feature-icon span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: var(--lime-moss);
+  border-radius: 2px;
+}
+
+.feature-header h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--lavender-mist);
+  margin: 0.5rem;
+}
+
+/* MÓVIL: cada feature ocupa TODA la pantalla */
+@media (max-width: 48rem) {
+  .feature {
+    min-height: 100vh;            /* Ocupa la pantalla completa */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;      /* Centra verticalmente */
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+@media (max-width: 48rem) {
+  .feature-header {
+    margin-bottom: 3rem; /* respiración visual */
+  }
+}

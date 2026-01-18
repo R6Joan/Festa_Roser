@@ -1,0 +1,9 @@
+
+
+@font-face {
+  font-family: "MiFuente"; /* nombre que usarás en CSS */
+  src: url("../../fonts/MiFuente.woff2") format("woff2"),
+       url("../../fonts/MiFuente.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}

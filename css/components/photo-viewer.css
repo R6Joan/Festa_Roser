@@ -1,0 +1,137 @@
+/* =========================
+   PHOTO VIEWER (fullscreen)
+   ========================= */
+
+.photo-viewer {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+
+.photo-viewer.visible {
+  display: block;
+}
+
+.photo-viewer-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(0.4rem);
+}
+
+/* Contenedor de la foto */
+.photo-viewer-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.94);
+  opacity: 0;
+  margin: 0;
+  max-width: min(90vw, 48rem);
+  max-height: 88vh;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.photo-viewer.visible .photo-viewer-content {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.photo-viewer-content img {
+  width: 100%;
+  height: auto;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 0.9rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.45);
+  background: var(--lavender-mist);
+}
+
+/* Botón cerrar */
+.photo-viewer-close {
+  position: absolute;
+  top: -1.4rem;
+  right: -1.4rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999rem;
+  border: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  box-shadow: 0 0.6rem 1.8rem rgba(0, 0, 0, 0.5);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.photo-viewer-close:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+}
+
+/* Flechas: por defecto no se muestran (solo mòbil) */
+.photo-viewer-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  border-radius: 999rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.6rem;
+  cursor: pointer;
+  display: none; /* se activan solo en mòbil */
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  box-shadow: 0 0.6rem 1.8rem rgba(0, 0, 0, 0.5);
+}
+
+.photo-viewer-arrow.prev {
+  left: 0.4rem;
+}
+
+.photo-viewer-arrow.next {
+  right: 0.4rem;
+}
+
+/* =========================
+   MOBILE FIRST
+========================= */
+@media (max-width: 48rem) {
+  .photo-viewer-content {
+    max-width: 94vw;
+    max-height: 88vh;
+  }
+
+  .photo-viewer-content img {
+    border-radius: 0.7rem;
+  }
+
+  .photo-viewer-close {
+    top: -1.1rem;
+    right: -1.1rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.3rem;
+  }
+
+  .photo-viewer-arrow {
+    display: flex; /* SOLO en mòbil se ven las flechas */
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.4rem;
+  }
+}
+
+/* Un poco más compacto en pantallas muy bajas (teclado, landscape) */
+@media (max-height: 48rem) {
+  .photo-viewer-content {
+    max-height: 80vh;
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "foto1",
+    "src": "images/481076243_968041985446518_7437996042005722288_n.jpg",
+    "uploader": {
+      "provider": "system",
+      "name": "Organització"
+    }
+  },
+  {
+    "id": "foto2",
+    "src": "images/185314667_908732833031786_254628354204934754_n.jpg",
+    "uploader": {
+      "provider": "system",
+      "name": "Organització"
+    }
+  },
+  {
+    "id": "foto3",
+    "src": "images/59639379_2296333270686535_9144693647650848768_n.jpg",
+    "uploader": {
+      "provider": "system",
+      "name": "Organització"
+    }
+  },
+  {
+    "id": "foto-1768664010879",
+    "src": "/uploads/1768664007105-99957637.jpeg",
+    "uploader": {
+      "provider": "google",
+      "name": "Joan Rivero Cruz"
+    }
+  },
+  {
+    "id": "foto-1768665301321",
+    "src": "/uploads/1768665300430-209722824.jpg",
+    "uploader": {
+      "provider": "google",
+      "name": "Joan Rivero Cruz"
+    }
+  },
+  {
+    "id": "foto-1768675365890",
+    "src": "/uploads/1768675323650-933577040.jpeg",
+    "uploader": {
+      "provider": "google",
+      "name": "Joan Rivero Cruz"
+    }
+  }
+]

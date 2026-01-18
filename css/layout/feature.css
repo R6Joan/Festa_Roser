@@ -1,0 +1,73 @@
+/* =========================
+   FEATURE (GRAFITO FULL-WIDTH)
+========================= */
+
+.feature {
+  position: relative;
+  width: 100%;
+  padding: clamp(2.5rem, 5vw, 5rem) 0;
+  background:
+    linear-gradient(145deg, #2a2a2a, #1b1b1b),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.02),
+      rgba(255,255,255,0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  background-blend-mode: overlay;
+}
+
+/* Contenedor header de la sección */
+.feature-header {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centra todo horizontalmente */
+  position: relative;      /* para colocar icono en la izquierda */
+  margin-bottom: 2rem;
+  padding: 0 clamp(1rem, 3vw, 1.5rem);
+  align-items: center;
+}
+
+/* Icono tipo menú (3 líneas) */
+.feature-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 20px;
+  position: relative; /* lo sacamos del flujo para dejar el título centrado */
+}
+
+.feature-icon span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: var(--lime-moss);
+  border-radius: 2px;
+}
+
+/* Título de la sección */
+.feature-header h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var( --lavender-mist);
+  margin: 0;
+  margin: 0.5rem;
+}
+
+/* =========================
+   FEATURE - MOBILE
+========================= */
+
+@media (max-width: 48em) {
+  .feature {
+    min-height: 100vh;   /* ocupa toda la altura de la pantalla */
+    padding: clamp(2.5rem, 5vw, 5rem) 0; /* mantiene el padding superior e inferior */
+    display: flex;
+    flex-direction: column; /* para que el contenido siga apilado verticalmente */
+  }
+  
+}
+
+

@@ -1,0 +1,118 @@
+.main-banner {
+    /* Volvemos a usar flexbox para columnas */
+    display: flex; 
+    justify-content: space-between;
+    align-items: stretch; /* Asegura que ambas columnas tengan la misma altura */
+    
+    width: 100%;
+    min-height: 100vh;  /* Desktop: ocupa toda la pantalla */
+    height: 100vh;      /* si quieres que sea exactamente 100vh */
+    border-radius: 8px;
+    overflow: hidden; 
+    position: relative; 
+    background-color: var(--main-bg-color); /* Color de respaldo */
+}
+
+.main-banner::before {
+   display: none;
+}
+
+/* Contenido (texto): Ahora es una columna sólida a la izquierda */
+.banner-content {
+    /* Le damos un ancho fijo para que la otra columna (mapa) ocupe el resto */
+    flex: 0 0 20%; 
+    padding: 30px 40px; 
+    z-index: 1; 
+    box-sizing: border-box;
+    
+    /* Usamos tu color lime-moss sólido como fondo */
+    background: var(--lime-moss); 
+    
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; /* Centrado verticalmente dentro de su columna */
+    align-items: flex-start;
+    
+    pointer-events: auto;
+}
+
+/* Contenedor del mapa: Ahora es la columna de la derecha */
+.banner-map-container {
+    flex: 1; 
+    position: relative;
+    z-index: 0; 
+}
+
+.banner-map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: 0; 
+    display: block;
+    filter: brightness(0.9) contrast(1.1); 
+}
+
+/* Estilos de texto */
+.banner-content h1 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0; 
+    font-weight: 700;
+    pointer-events: auto; 
+    color: var(--lavender-mist);
+}
+
+.banner-content p {
+    font-size: 1rem;
+    max-width: 400px;
+    line-height: 1.4;
+    opacity: 0.9;
+    margin: 0; 
+    pointer-events: auto; 
+    color: var(--lavender-mist);
+}
+
+/* Media Query Responsivo para móviles */
+@media (max-width: 48em){
+    .main-banner {
+        /* Mobile: banner más bajo, tipo 16/9 pero limitado */
+        aspect-ratio: auto;
+        border-radius: 0; 
+        justify-content: flex-start;
+        flex-direction: column;
+        background: var(--lime-moss);
+        padding-bottom: 1rem;
+    }
+
+    .banner-content {
+        flex: 0 0 auto; 
+        width: 100%; 
+        padding: 20px;
+        overflow-y: auto; 
+    }
+
+    .banner-map-container {
+        height: calc(100vw * 4 / 3); /* relación 3:4 (vertical) */
+        max-height: 80vh;
+        flex: 1; 
+        height: auto;
+        width: 80%;
+        margin: 0 auto;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+}
+
+/* =========================
+   MAIN BANNER REVERSE (MOBILE)
+========================= */
+
+@media (max-width: 48em) {
+  .main-banner--reverse .banner-map-container {
+    order: 2;
+  }
+
+  .main-banner--reverse .banner-content {
+    order: 1;
+  }
+
+}
