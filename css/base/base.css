@@ -1,0 +1,12 @@
+/* =========================
+   BASE
+========================= */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  line-height: 1.4;
+  overflow-x: hidden;
+  background: var(--green);
+  color: var(--onyx);
+}

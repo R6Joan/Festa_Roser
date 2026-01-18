@@ -1,0 +1,151 @@
+/* =========================
+   CARDS GRID (MOBILE FIRST)
+========================= */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  justify-items: stretch;
+  align-items: stretch;
+  max-width: 1300px;
+  margin: 0 auto 5rem;
+  padding: 0 clamp(1rem, 3vw, 1.5rem);
+}
+
+/* Desktop → 4 cards */
+@media (min-width: 1024px) {
+  .cards {
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+  }
+}
+
+/* =========================
+   CARD (altura igualada por JS)
+========================= */
+
+.cards .card {
+  width: 100%;
+  max-width: 300px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.35),
+    0 4px 10px rgba(0,0,0,0.2);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+
+  text-decoration: none;
+
+  /* clave: dejamos que JS ponga la altura */
+  height: auto;
+}
+
+/* Desktop look fijo opcional (solo si quieres mantener 4/5)
+   Si esto te vuelve a cortar texto, quítalo. */
+@media (min-width: 1024px) {
+  .cards .card {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* Mobile: sin aspect-ratio rígido */
+@media (max-width: 48rem) {
+  .cards .card {
+    aspect-ratio: auto;
+    max-width: none;
+  }
+}
+
+.cards .card:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.45),
+    0 8px 18px rgba(0,0,0,0.3);
+}
+
+.cards .card:hover::after {
+  background: var(--lime-moss);
+}
+
+/* =========================
+   INNER CARD (VERDE)
+========================= */
+
+.cards .card::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  background: var(--green);
+  border: 2px solid #f3eff5;
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.cards .card .content {
+  z-index: 1;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  padding-left: 10%;
+  padding-right: 10%;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  /* hace que el contenido se distribuya bien dentro de la altura fija */
+  flex: 1;
+}
+
+/* =========================
+   TEXT
+========================= */
+
+.cards .card h1,
+.cards .card .content h3,
+.cards .card .content p {
+  text-decoration: none;
+  color: inherit;
+}
+
+.cards .card h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--white);
+  text-align: left;
+}
+
+.cards .card .content h3 {
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid floralwhite;
+
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  text-transform: uppercase;
+  color: var(--white);
+  text-align: left;
+}
+
+.cards .card .content p {
+  margin: 0;
+  max-width: 100%;
+  font-size: clamp(0.75rem, 1.6vw, 1rem);
+  line-height: 1.4;
+  color: var(--lavender-mist);
+  text-align: left;
+}

@@ -1,27 +1,256 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="eng">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Festa del Roser 2025</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Festa del Roser 2026</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="js/state.js" defer></script>
+  <script src="js/render.js" defer></script>
+  <script src="js/main.js" defer></script>
 </head>
+
 <body>
-  <header>
-    <h1>Festa del <span class="line-2">Roser</span><img src="images/rosa.png" alt="Rosa" class="header-rose"></h1>
-  </header> 
 
-  <main>
+  <!-- HERO INICIAL -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
 
-    <section class="map-container">
-      <p class="map-caption">Punt de trobada🗺</p>
-      <iframe
-        src="https://www.google.com/maps?q=Carrer+de+les+Escoles+21+7+17181+Aiguaviva+Girona&output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        aria-label="Mapa de Carrer de les Escoles, Aiguaviva">
-      </iframe>
-    </section> 
-  </main>
+    <div class="hero-content">
+      <h1>
+        Festa del Roser
+        <span>2026 · Aiguaviva</span>
+      </h1>
+
+      <p>
+        Celebrem junts una festa plena de tradició, música i cultura popular.
+      </p>
+
+      <a href="#menu" class="hero-btn">Activitats</a>
+    </div>
+  </section>
+
+  <!-- FEATURE SECCIÓ: TEXT + MAPA -->
+  <section class="feature" id="menu">
+  <div class="feature-header">
+    <div class="feature-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <h2>Activitats</h2>
+  </div>
+
+    <div class="feature__inner">
+      <div class="cards">
+        <div class="card">
+          <div class="content"> 
+            <h1>01</h1>
+
+      <h3>
+        Servei bar
+      </h3>
+        <p> Apropa't a les nostes instalacions a prendre algo després d'haver realitzat la cursa.</p>
+        </div>
+        </div>
+      <a class="card" href="#5km">
+        <div class="content"> 
+            <h1>02</h1>
+
+      <h3>
+        Cursa 5 km
+      </h3>
+        <p> Gaudeix d'una cursa per coneixer millor l'espai natural del poble d'Aiguaviva.</p>
+          </div>
+        </a>
+              <a class="card " href="#10km">
+        <div class="content"> 
+            <h1>03</h1>
+
+      <h3>
+        Cursa 10 km
+      </h3>
+        <p> La cursa pels més atrevits, preparat per gaudir la natura pel poble d'Aiguaviva.</p>
+          </div>
+        </a>
+              <a class="card" href="#concurs-fotos">
+        <div class="content"> 
+            <h1>04</h1>
+
+      <h3>
+        Fotografies
+      </h3>
+        <p> En aquesta secció podràs trobar fotografies de la festa, perquè puguis recordar els moments més alegres.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+
+      <!-- SECCIÓN DEL MAPA -->
+      <section id="5km">
+        <div class="main-banner">
+            <!-- Contenido Izquierdo: Texto y Etiqueta -->
+            <div class="banner-content">
+                <h1>Cursa 5km</h1>
+           </div>
+            <!-- Contenido Derecho: Mapa -->
+            <div class="banner-map-container">
+                <iframe 
+                    src="https://www.google.com/maps?q=Carrer+de+les+Escoles+21+7+17181+Aiguaviva+Girona&z=14&output=embed"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    aria-label="Mapa de Carrer de les Escoles, Aiguaviva">
+                </iframe>
+            </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div> <!-- Fin de .page-wrapper -->
+
+  <section class="main-banner main-banner--reverse" id="10km">
+  <!-- Mapa a la izquierda -->
+  <div class="banner-map-container">
+    <iframe 
+      src="https://www.google.com/maps?q=Carrer+de+les+Escoles+21+7+17181+Aiguaviva+Girona&z=14&output=embed"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      aria-label="Mapa cursa 10km">
+    </iframe>
+  </div>
+
+  <!-- Texto a la derecha -->
+  <div class="banner-content">
+    <h1>Cursa 10km</h1>
+  </div>
+</section>
+
+
+<!-- FEATURE SECCIÓ: CONCURS DE FOTOS -->
+<section class="feature" id="concurs-fotos">
+  <div class="feature-header">
+    <div class="feature-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="var(--lime-moss)">
+        <path d="M20 5h-3.17l-1.83-2H9L7.17 5H4c-1.1 0-2 .9-2 2v12a2 2 0 002 2h16a2 2 0 002-2V7c0-1.1-.9-2-2-2zm-8 12a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+      </svg>
+    </div>
+    <h2>Fotografia</h2>
+  </div>
+
+  <div class="feature__inner">
+
+    <!-- PHOTO FEED (LAS 3 FOTOS AQUÍ) -->
+    <div class="photo-feed">
+
+      <div class="photo-card" data-id="foto1">
+        <img src="images/481076243_968041985446518_7437996042005722288_n.jpg" alt="Foto 1">
+        <button class="vote-btn" aria-label="Votar">
+          <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+        <span class="vote-count">0</span>
+      </div>
+
+      <div class="photo-card" data-id="foto2">
+        <img src="images/185314667_908732833031786_254628354204934754_n.jpg" alt="Foto 2">
+        <button class="vote-btn" aria-label="Votar">
+          <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+        <span class="vote-count">0</span>
+      </div>
+
+      <div class="photo-card" data-id="foto3">
+        <img src="images/59639379_2296333270686535_9144693647650848768_n.jpg" alt="Foto 3">
+        <button class="vote-btn" aria-label="Votar">
+          <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+        <span class="vote-count">0</span>
+      </div>
+
+    </div> <!-- FIN .photo-feed -->
+
+
+
+<form id="upload-form" class="upload-form minimal" action="/upload" method="POST" enctype="multipart/form-data">
+
+  <!-- INPUT OCULTO PERO FUNCIONAL -->
+  <input
+    id="upload-input"
+    class="upload-input"
+    type="file"
+    name="photo"
+    accept="image/*"
+    required
+    hidden
+  >
+
+  <!-- LABEL = BOTÓN VISIBLE -->
+  <label for="upload-input" id="upload-trigger" class="upload-trigger">
+    Pujar foto
+  </label>
+
+  <button type="submit" class="upload-submit" hidden>
+    Enviar
+  </button>
+</form>
+
+
+
+  </div> <!-- FIN .feature__inner -->
+</section> <!-- FIN #concurs-fotos -->
+
+
+<!-- ======================
+     MODAL LOGIN (NECESARIO PARA QUE FUNCIONE main.js)
+====================== -->
+<div id="login-modal" class="login-modal" aria-hidden="true">
+  <div id="login-modal-overlay" class="login-modal-overlay"></div>
+
+  <div class="login-modal-card" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <button id="login-modal-close" class="login-modal-close" aria-label="Tancar">×</button>
+
+    <div class="login-modal-header">
+      <h2 id="login-title" class="login-modal-title">Inicia sessió per continuar</h2>
+      <p class="login-modal-subtitle">Cal iniciar sessió amb Google o Facebook per votar o pujar fotos.</p>
+    </div>
+
+    <div class="login-modal-actions">
+      <button id="login-google-btn" class="login-provider-btn google" type="button">
+        Continuar amb Google
+      </button>
+
+      <button id="login-facebook-btn" class="login-provider-btn facebook" type="button">
+        Continuar amb Facebook
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- =========================
+     FULLSCREEN PHOTO VIEWER
+========================= -->
+<div id="photo-viewer" class="photo-viewer" aria-hidden="true">
+  <div class="photo-viewer-overlay"></div>
+
+  <figure class="photo-viewer-content" role="dialog" aria-modal="true">
+    <button class="photo-viewer-close" aria-label="Tancar">×</button>
+    <button class="photo-viewer-arrow prev" aria-label="Foto anterior">‹</button>
+    <button class="photo-viewer-arrow next" aria-label="Foto següent">›</button>
+
+    <img id="photo-viewer-img" src="" alt="Foto ampliada">
+  </figure>
+</div>
+
+
+
 </body>
-</html> 
+</html>

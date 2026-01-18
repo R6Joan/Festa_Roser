@@ -1,0 +1,237 @@
+/* ======================
+   MODAL LOGIN (estilo web)
+   ====================== */
+
+.login-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+
+.login-modal.visible {
+  display: block;
+}
+
+.login-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+}
+
+/* Tarjeta del modal */
+.login-modal-card {
+  position: relative;
+  width: min(520px, calc(100% - 2rem));
+  margin: 10vh auto;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(255,255,255,0.55);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  padding: 22px;
+  transform: translateY(10px);
+  opacity: 0;
+  animation: loginModalIn 180ms ease-out forwards;
+}
+
+@keyframes loginModalIn {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.login-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+  color: var(--charcoal-blue);
+  opacity: 0.8;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.login-modal-close:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.login-modal-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.login-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--lavender-mist);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  color: var(--charcoal-blue);
+}
+
+.login-modal-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--charcoal-blue);
+}
+
+.login-modal-subtitle {
+  margin: 6px 0 0 0;
+  color: rgba(0,0,0,0.65);
+  line-height: 1.35;
+  font-size: 0.95rem;
+}
+
+.login-modal-actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.login-provider-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.16);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.login-provider-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+}
+
+.login-provider-btn:active {
+  transform: translateY(0);
+}
+
+.provider-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.provider-text {
+  flex: 1;
+  text-align: left;
+  color: var(--charcoal-blue);
+}
+
+/* Botón Google: neutro, acorde a tu web */
+.login-provider-btn.google {
+  background: var(--lavender-mist);
+}
+
+/* Botón Facebook: azul, pero sin romper paleta */
+.login-provider-btn.facebook {
+  background: var(--lime-moss);
+}
+
+.login-provider-btn.facebook .provider-text {
+  color: #fff;
+}
+
+.login-provider-btn.facebook .provider-icon {
+  background: rgba(255,255,255,0.22);
+  color: #fff;
+}
+
+/* Nota */
+.login-modal-note {
+  margin: 4px 2px 0;
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.6);
+  line-height: 1.35;
+}
+
+/* ======================
+   LOGIN MODAL - RESPONSIVE (RELATIVO)
+   ====================== */
+
+/* Altura flexible y scroll suave */
+.login-modal-card {
+  max-height: min(85vh, 40rem);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Pantallas pequeñas */
+@media (max-width: 30rem) {
+  .login-modal-card {
+    width: min(92vw, 32rem);
+    margin: 12vh auto 2vh;
+    padding: clamp(1rem, 4vw, 1.4rem);
+    border-radius: 1.2rem;
+  }
+
+  .login-modal-header {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .login-badge {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.9rem;
+  }
+
+  .login-modal-title {
+    font-size: clamp(1.05rem, 4vw, 1.2rem);
+  }
+
+  .login-modal-subtitle {
+    font-size: clamp(0.9rem, 3.5vw, 0.98rem);
+  }
+
+  .login-provider-btn {
+    padding: clamp(0.75rem, 4vw, 1rem);
+    border-radius: 1.1rem;
+    gap: 0.75rem;
+  }
+
+  .provider-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.9rem;
+  }
+
+  .provider-text {
+    font-size: clamp(0.95rem, 4vw, 1.05rem);
+  }
+
+  .login-modal-close {
+    font-size: 1.8rem;
+  }
+
+  .login-modal-note {
+    font-size: clamp(0.78rem, 3.2vw, 0.85rem);
+  }
+}
+
+/* Pantallas muy bajas (teclado abierto, landscape) */
+@media (max-height: 40rem) {
+  .login-modal-card {
+    margin-top: 8vh;
+    max-height: 75vh;
+  }
+}

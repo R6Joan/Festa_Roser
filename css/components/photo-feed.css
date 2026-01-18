@@ -1,0 +1,242 @@
+/* =========================
+   PHOTO FEED
+========================= */
+.photo-feed {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 0.75rem;
+  justify-content: center;
+  max-width: min(72rem, 100%);
+  margin: 2rem auto;
+  padding-inline: 1rem; /* margen lateral general */
+}
+
+/* =========================
+   PHOTO CARD
+========================= */
+.photo-card {
+  position: relative;
+  aspect-ratio: 1 / 1;               /* cuadrada, estilo feed IG */
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--lavender-mist);
+  box-shadow: 0 0.25rem 0.9rem rgba(0,0,0,0.22);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.photo-card:hover {
+  transform: translateY(-0.3rem);
+  box-shadow: 0 0.5rem 1.6rem rgba(0,0,0,0.3);
+}
+
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* =========================
+   MOBILE: carrusel 1 foto
+========================= */
+@media (max-width: 48rem) {
+  .photo-feed {
+    display: flex;                
+
+    /* Sin padding para no desplazar el primer elemento */
+    padding: 0;
+    margin: 1.5rem 0;
+
+    width: 100%;
+    max-width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
+    scroll-behavior: smooth;
+
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+  }
+
+  .photo-feed::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-card {
+    /* Una foto por "pantalla" pero con margen/gap visual */
+    flex: 0 0 85vw;             
+    scroll-snap-align: start;
+
+    margin: 0 0.75rem;
+      height: calc(100vw * 4 / 3); /* relación 3:4 (vertical) */
+      max-height: 80vh;
+    border-radius: 0.9rem;
+  }
+
+  /* que la primera empiece bien en pantalla */
+  .photo-card:first-child {
+    margin-left: 1rem;
+  }
+
+  .photo-card:last-child {
+    margin-right: 1rem;
+  }
+
+  .photo-card:hover {
+    transform: none;
+    box-shadow: 0 0.25rem 0.9rem rgba(0,0,0,0.22);
+  }
+
+  .vote-btn {
+    bottom: 0.8rem;
+  }
+
+  .vote-count {
+    top: 0.8rem;
+    right: 0.8rem;
+  }
+}
+
+
+
+/* =========================
+   VOTE BUTTON
+========================= */
+.vote-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--lime-moss);
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+.vote-btn:hover {
+  transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.vote-btn.voted {
+  background: var(--green);
+}
+
+/* =========================
+   HEART ICON
+========================= */
+.vote-btn .heart-icon {
+  width: 20px;
+  height: 20px;
+  stroke: #fff;
+  fill: none;
+  transition: transform 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
+}
+
+.vote-btn.voted .heart-icon {
+  stroke: #ff4d4d;
+  fill: #ff4d4d;
+}
+
+.vote-btn.unvoted .heart-icon {
+  stroke: var(--charcoal-blue);
+  fill: var(--charcoal-blue);
+}
+
+/* =========================
+   VOTE COUNT
+========================= */
+.vote-count {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.5);
+  color: var(--white);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  z-index: 2;
+  transition: all 0.3s ease; /* tamaño y color */
+}
+
+/* Animación para votar: rojo y escala */
+.vote-count.voted {
+  color: #ff4d4d;           /* rojo */
+  transform: scale(1.4);
+}
+
+/* Animación para desvotar: azul carbón y escala */
+.vote-count.unvoted {
+  color: var(--charcoal-blue); /* azul carbón */
+  transform: scale(1.4);
+}
+
+/* =========================
+   UPLOAD FORM – MINIMAL
+========================= */
+.upload-form.minimal {
+  display: flex;
+  flex-direction: column;   /* uno debajo del otro */
+  align-items: center;      /* centrar horizontal */
+  gap: 0.75rem;             /* separación entre botones */
+  margin-top: 1.25rem;
+}
+
+.upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Botón principal */
+.upload-trigger {
+  background: var(--lime-moss);              /* fondo verde lima */
+  border: none;
+  color: var(--lavender-mist);               /* texto lavanda */
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease,
+              background 0.25s ease;
+  box-shadow: 0 0.3rem 0.9rem rgba(0,0,0,0.18);
+}
+
+.upload-trigger:hover {
+  background: var(--green);                  /* verde un poco más intenso */
+  transform: translateY(-1px);
+  box-shadow: 0 0.6rem 1.2rem rgba(0,0,0,0.25);
+}
+
+
+/* Botón enviar (cuando hay foto) */
+.upload-submit {
+  margin-left: 0.5rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  background: var(--lime-moss);
+  color: var(--white);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0.3rem 0.8rem rgba(0,0,0,0.15);
+}

@@ -1,0 +1,98 @@
+/* =========================
+   HERO INICIAL
+========================= */
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url("../../images/185314667_908732833031786_254628354204934754_n.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  color: var(--white);
+}
+
+/* Overlay para legibilidad */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(13, 10, 11, 0.75),
+    rgba(13, 10, 11, 0.35)
+  );
+}
+
+/* Contenido del hero */
+.hero-content {
+  position: relative;
+  max-width: 600px;
+  z-index: 1;
+}
+
+/* Título */
+.hero h1 {
+  font-family: 'Story Boo', Arial, sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  margin: 0 0 1rem 0;
+  line-height: 1.1;
+}
+
+.hero h1 span {
+  display: block;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 300;
+  margin-top: 0.5rem;
+  color: var(--lime-moss);
+}
+
+/* Texto */
+.hero p {
+  font-size: 1.1rem;
+  max-width: 480px;
+  margin-bottom: 1.5rem;
+}
+
+/* Botón */
+.hero-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--lime-moss);
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 4px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.hero-btn:hover {
+  background: var(--green);
+  color: var(--white);
+}
+
+/* =========================
+   HERO - MOBILE
+========================= */
+
+@media (max-width: 48em) {
+  .hero {
+    padding: 1.5rem;
+    align-items: flex-end;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    background-size: 200% 100%;
+    background-position: right;
+  }
+}
