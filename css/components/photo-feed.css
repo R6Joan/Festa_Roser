@@ -1,3 +1,26 @@
+﻿/* =========================
+   PHOTO SECTION WRAP
+========================= */
+.photo-section {
+  max-width: min(74rem, 100%);
+  margin: 1.5rem auto 0;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 0.6rem 1.6rem rgba(0,0,0,0.2);
+}
+
+@media (max-width: 48rem) {
+  .photo-section {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
 /* =========================
    PHOTO FEED
 ========================= */
@@ -34,6 +57,39 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* =========================
+   DELETE BUTTON
+========================= */
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  color: var(--white);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.delete-btn:hover {
+  transform: scale(1.08);
+  background: rgba(0,0,0,0.7);
+}
+
+.delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* =========================
@@ -74,7 +130,7 @@
     scroll-snap-align: start;
 
     margin: 0 0.75rem;
-      height: calc(100vw * 4 / 3); /* relación 3:4 (vertical) */
+      height: calc(100vw * 4 / 3); /* relaciÇün 3:4 (vertical) */
       max-height: 80vh;
     border-radius: 0.9rem;
   }
@@ -183,6 +239,38 @@
 .vote-count.unvoted {
   color: var(--charcoal-blue); /* azul carbón */
   transform: scale(1.4);
+}
+
+/* =========================
+   VER MAS FOTOS
+========================= */
+.photo-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0 1rem;
+}
+
+.photo-more-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  background: var(--lime-moss);
+  color: var(--white);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0.3rem 0.8rem rgba(0,0,0,0.15);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.photo-more-btn:hover {
+  background: var(--green);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 48rem) {
+  .photo-more-wrap {
+    display: none;
+  }
 }
 
 /* =========================

@@ -1,4 +1,4 @@
-@import "base/variables.css";
+﻿@import "base/variables.css";
 @import "base/base.css";
 @import "base/fonts.css";
 
@@ -10,3 +10,4 @@
 @import "components/photo-feed.css";
 @import url('./components/login-modal.css');
 @import url('./components/photo-viewer.css');
+@import url('./components/error-modal.css');

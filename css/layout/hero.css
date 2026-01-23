@@ -1,9 +1,10 @@
-/* =========================
+﻿/* =========================
    HERO INICIAL
 ========================= */
 
 .hero {
   position: relative;
+  isolation: isolate;
   width: 100%;
   min-height: 100vh;
   background-image: url("../../images/185314667_908732833031786_254628354204934754_n.jpg");
@@ -16,15 +17,28 @@
   color: var(--white);
 }
 
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 80% at 15% 20%, rgba(193, 255, 132, 0.35), transparent 60%),
+    radial-gradient(40% 50% at 80% 10%, rgba(255, 255, 255, 0.18), transparent 60%),
+    linear-gradient(120deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.15));
+  z-index: 0;
+}
+
 /* Overlay para legibilidad */
 .hero-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to right,
-    rgba(13, 10, 11, 0.75),
-    rgba(13, 10, 11, 0.35)
+    100deg,
+    rgba(7, 12, 10, 0.78),
+    rgba(7, 12, 10, 0.15)
   );
+  mix-blend-mode: multiply;
+  z-index: 0;
 }
 
 /* Contenido del hero */
@@ -32,46 +46,107 @@
   position: relative;
   max-width: 600px;
   z-index: 1;
+  animation: heroIn 500ms ease-out both;
 }
 
-/* Título */
+@keyframes heroIn {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Titulo */
 .hero h1 {
-  font-family: 'Story Boo', Arial, sans-serif;
-  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-family: "MiFuente", "Trebuchet MS", Arial, sans-serif;
+  font-size: clamp(2.8rem, 7vw, 5.2rem);
   margin: 0 0 1rem 0;
-  line-height: 1.1;
+  line-height: 1.05;
+  text-shadow: 0 12px 40px rgba(0,0,0,0.55);
+  letter-spacing: 0.02em;
 }
 
 .hero h1 span {
   display: block;
-  font-size: clamp(1.2rem, 3vw, 2rem);
-  font-weight: 300;
-  margin-top: 0.5rem;
-  color: var(--lime-moss);
+  font-size: clamp(0.95rem, 2.4vw, 1.2rem);
+  font-weight: 700;
+  margin-top: 0.7rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.35);
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  display: inline-block;
 }
 
 /* Texto */
 .hero p {
-  font-size: 1.1rem;
-  max-width: 480px;
-  margin-bottom: 1.5rem;
+  font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+  max-width: 380px;
+  margin-bottom: 1.6rem;
+  font-weight: 500;
 }
 
-/* Botón */
+/* Boton */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .hero-btn {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.7rem;
   background: var(--lime-moss);
   color: var(--white);
   text-decoration: none;
   font-weight: 700;
-  border-radius: 4px;
-  transition: background 0.3s ease, color 0.3s ease;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .hero-btn:hover {
   background: var(--green);
   color: var(--white);
+  transform: translateY(-2px);
+}
+
+.hero-login {
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-login-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.8);
+}
+
+.hero-login-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.25);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.hero-login-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.1);
+}
+
+.hero-login-icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* =========================

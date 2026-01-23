@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 
 // server.js
 const express = require('express');
@@ -31,6 +31,7 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 
 // Helpers votos
 function loadVotes() {
+  if (!fs.existsSync(VOTES_FILE)) return {};
   const data = fs.readFileSync(VOTES_FILE, 'utf-8');
   return JSON.parse(data);
 }
@@ -108,12 +109,11 @@ passport.deserializeUser((obj, done) => {
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,          // <- desde .env
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,  // <- desde .env
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: 'http://192.168.1.52.nip.io:3000/auth/google/callback',
     },
     (accessToken, refreshToken, profile, done) => {
-      // Guardamos solo lo mínimo
       const user = {
         provider: 'google',
         id: profile.id,
@@ -130,8 +130,8 @@ passport.use(
 passport.use(
   new FacebookStrategy(
     {
-      clientID: process.env.FACEBOOK_APP_ID,          // <- desde .env
-      clientSecret: process.env.FACEBOOK_APP_SECRET,  // <- desde .env
+      clientID: process.env.FACEBOOK_APP_ID,
+      clientSecret: process.env.FACEBOOK_APP_SECRET,
       callbackURL: 'http://localhost:3000/auth/facebook/callback',
       profileFields: ['id', 'displayName', 'emails'],
     },
@@ -151,14 +151,13 @@ passport.use(
 // -----------------------------
 app.get(
   '/auth/google',
-  passport.authenticate('google', { scope: ['profile'] }) // solo perfil, sin email
+  passport.authenticate('google', { scope: ['profile'] })
 );
 
 app.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    // Vuelve a la página principal (directamente al concurso si quieres)
     res.redirect('/#concurs-fotos');
   }
 );
@@ -168,7 +167,7 @@ app.get(
 // -----------------------------
 app.get(
   '/auth/facebook',
-  passport.authenticate('facebook') // por defecto solo perfil público básico
+  passport.authenticate('facebook')
 );
 
 app.get(
@@ -181,17 +180,16 @@ app.get(
 
 // -----------------------------
 //   ENDPOINT /me
-//   Para que el front sepa si está logueado
 // -----------------------------
 app.get('/me', (req, res) => {
   if (!req.user) {
     return res.status(401).json({ ok: false });
   }
-  // Devolvemos solo lo necesario
   res.json({
     ok: true,
     user: {
       provider: req.user.provider,
+      id: req.user.id,
       name: req.user.name,
     },
   });
@@ -215,55 +213,106 @@ app.get('/photos', (req, res) => {
 });
 
 // POST /upload → subir foto (requiere login)
-app.post('/upload', upload.single('photo'), (req, res) => {
+app.post('/upload', (req, res) => {
   if (!req.user) {
     return res.status(401).send("Has d'iniciar sessió per pujar fotos.");
   }
 
-  if (!req.file) {
-    return res.status(400).send('No s’ha enviat cap imatge.');
+  upload.single('photo')(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).send('Arxiu massa pesat. Tamany màxim 10mb');
+      }
+      return res.status(400).send(err.message || 'Error al subir la foto.');
+    }
+
+    if (!req.file) {
+      return res.status(400).send('No s’ha enviat cap imatge.');
+    }
+
+    const photos = loadPhotos();
+
+    const newId = 'foto-' + Date.now();
+    const publicPath = '/uploads/' + req.file.filename;
+
+    const newPhoto = {
+      id: newId,
+      src: publicPath,
+      uploader: {
+        provider: req.user.provider,
+        id: req.user.id,
+        name: req.user.name,
+      },
+    };
+
+    photos.push(newPhoto);
+    savePhotos(photos);
+
+    const votes = loadVotes();
+    if (!votes[newId]) {
+      votes[newId] = { voters: [] };
+      saveVotes(votes);
+    }
+
+    io.emit('photoAdded', {
+      id: newId,
+      src: publicPath,
+      uploader: newPhoto.uploader,
+      votes: 0,
+      voted: false,
+    });
+
+    res.redirect('/#concurs-fotos');
+  });
+});
+
+// DELETE /photos/:id -> borrar foto (solo uploader)
+app.delete('/photos/:id', (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Has d'iniciar sessió per esborrar fotos." });
   }
 
+  const photoId = req.params.id;
   const photos = loadPhotos();
+  const index = photos.findIndex((p) => p.id === photoId);
 
-  const newId = 'foto-' + Date.now();
-  const publicPath = '/uploads/' + req.file.filename;
+  if (index === -1) {
+    return res.status(404).json({ error: 'Foto no trobada' });
+  }
 
-  const newPhoto = {
-    id: newId,
-    src: publicPath,
-    uploader: {
-      provider: req.user.provider,
-      name: req.user.name,
-    },
-  };
+  const photo = photos[index];
+  const sameProvider = photo?.uploader?.provider === req.user.provider;
+  const sameId = photo?.uploader?.id && photo.uploader.id === req.user.id;
+  const legacySameName = !photo?.uploader?.id && photo?.uploader?.name === req.user.name;
 
-  photos.push(newPhoto);
+  if (!sameProvider || !(sameId || legacySameName)) {
+    return res.status(403).json({ error: 'No tens permisos per esborrar aquesta foto' });
+  }
+
+  photos.splice(index, 1);
   savePhotos(photos);
 
-  // Crear entrada de votos vacía para la nueva foto
   const votes = loadVotes();
-  if (!votes[newId]) {
-    votes[newId] = { voters: [] };
+  if (votes[photoId]) {
+    delete votes[photoId];
     saveVotes(votes);
   }
 
-  // Notificar a todos los clientes que hay una foto nueva
-  io.emit('photoAdded', {
-    id: newId,
-    src: publicPath,
-    votes: 0,
-    voted: false,
-  });
+  if (photo?.src && photo.src.startsWith('/uploads/')) {
+    const filePath = path.join(UPLOADS_DIR, path.basename(photo.src));
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
 
-  res.redirect('/#concurs-fotos');
+  io.emit('photoDeleted', { id: photoId });
+  res.json({ ok: true });
 });
 
 // -----------------------------
 //   GESTIÓN DE VOTOS
 // -----------------------------
 
-// Helper para ID único de usuario
 function getUserId(req) {
   if (!req.user) return null;
   return `${req.user.provider}:${req.user.id}`;
@@ -309,10 +358,8 @@ app.post('/vote', (req, res) => {
   const index = voters.indexOf(userId);
 
   if (index === -1) {
-    // No había votado → añadimos
     voters.push(userId);
   } else {
-    // Ya había votado → quitamos
     voters.splice(index, 1);
   }
 
@@ -323,7 +370,6 @@ app.post('/vote', (req, res) => {
     voted: voters.includes(userId),
   };
 
-  // Emitir a todos el nuevo total
   io.emit('voteUpdated', { photo_id, data: dataForUser });
 
   res.json(dataForUser);
@@ -350,7 +396,7 @@ function getLocalIP() {
       }
     }
   }
-  return 'localhost'; // fallback
+  return 'localhost';
 }
 
 const HOST = getLocalIP();
@@ -362,4 +408,3 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(` - http://${HOST}:${PORT}`);
   console.log(` - http://${HOST}.nip.io:${PORT}  (domini per Google OAuth)`);
 });
-

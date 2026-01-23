@@ -1,33 +1,49 @@
-<!DOCTYPE html>
-<html lang="eng">
+﻿<!DOCTYPE html>
+<html lang="ca">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Festa del Roser 2026</title>
   <link rel="stylesheet" href="/css/styles.css">
   <script src="/socket.io/socket.io.js" defer></script>
-  <script src="js/state.js" defer></script>
   <script src="js/render.js" defer></script>
   <script src="js/main.js" defer></script>
 </head>
 
 <body>
 
-  <!-- HERO INICIAL -->
+    <!-- HERO INICIAL -->
   <section class="hero">
     <div class="hero-overlay"></div>
 
     <div class="hero-content">
       <h1>
         Festa del Roser
-        <span>2026 · Aiguaviva</span>
+        <span>12-13 juliol 2026 · Aiguaviva</span>
       </h1>
 
       <p>
-        Celebrem junts una festa plena de tradició, música i cultura popular.
+        Natura, esport i cultura en un sol cap de setmana.
       </p>
 
-      <a href="#menu" class="hero-btn">Activitats</a>
+      <div class="hero-actions">
+        <a href="#menu" class="hero-btn">Veure activitats</a>
+      </div>
+
+      <div class="hero-login">
+        <span class="hero-login-label">Entra amb</span>
+        <a class="hero-login-btn" href="/auth/google" aria-label="Entrar amb Google">
+          <svg class="hero-login-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+            <text x="12" y="16" text-anchor="middle" font-size="10" font-family="Arial" fill="currentColor">G</text>
+          </svg>
+        </a>
+        <a class="hero-login-btn" href="/auth/facebook" aria-label="Entrar amb Facebook">
+          <svg class="hero-login-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M13.5 9H16V6h-2.5C11.6 6 10 7.6 10 9.5V12H8v3h2v6h3v-6h2.6l.4-3H13v-2.2c0-.5.3-.8.8-.8z"/>
+          </svg>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -88,7 +104,7 @@
     </div>
 
 
-      <!-- SECCIÓN DEL MAPA -->
+      <!-- SECCIÓ DEL MAPA -->
       <section id="5km">
         <div class="main-banner">
             <!-- Contenido Izquierdo: Texto y Etiqueta -->
@@ -107,7 +123,6 @@
         </div>
       </section>
 
-    </main>
 
   </div> <!-- Fin de .page-wrapper -->
 
@@ -141,69 +156,69 @@
   </div>
 
   <div class="feature__inner">
+    <div class="photo-section">
+      <!-- PHOTO FEED (LAS 3 FOTOS AQUÍ) -->
+      <div class="photo-feed">
 
-    <!-- PHOTO FEED (LAS 3 FOTOS AQUÍ) -->
-    <div class="photo-feed">
+        <div class="photo-card" data-id="foto1">
+          <img src="images/481076243_968041985446518_7437996042005722288_n.jpg" alt="Foto 1">
+          <button class="vote-btn" aria-label="Votar">
+            <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <span class="vote-count">0</span>
+        </div>
 
-      <div class="photo-card" data-id="foto1">
-        <img src="images/481076243_968041985446518_7437996042005722288_n.jpg" alt="Foto 1">
-        <button class="vote-btn" aria-label="Votar">
-          <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-        </button>
-        <span class="vote-count">0</span>
+        <div class="photo-card" data-id="foto2">
+          <img src="images/185314667_908732833031786_254628354204934754_n.jpg" alt="Foto 2">
+          <button class="vote-btn" aria-label="Votar">
+            <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <span class="vote-count">0</span>
+        </div>
+
+        <div class="photo-card" data-id="foto3">
+          <img src="images/59639379_2296333270686535_9144693647650848768_n.jpg" alt="Foto 3">
+          <button class="vote-btn" aria-label="Votar">
+            <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <span class="vote-count">0</span>
+        </div>
+
+      </div> <!-- FIN .photo-feed -->
+
+      <div class="photo-more-wrap">
+        <button id="photo-more-btn" class="photo-more-btn" type="button">Veure més fotos</button>
       </div>
 
-      <div class="photo-card" data-id="foto2">
-        <img src="images/185314667_908732833031786_254628354204934754_n.jpg" alt="Foto 2">
-        <button class="vote-btn" aria-label="Votar">
-          <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
+      <form id="upload-form" class="upload-form minimal" action="/upload" method="POST" enctype="multipart/form-data">
+
+        <!-- INPUT OCULTO PERO FUNCIONAL -->
+        <input
+          id="upload-input"
+          class="upload-input"
+          type="file"
+          name="photo"
+          accept="image/*"
+          required
+          hidden
+        >
+
+        <!-- LABEL = BOTÓN VISIBLE -->
+        <label for="upload-input" id="upload-trigger" class="upload-trigger">
+          Pujar foto
+        </label>
+
+        <button type="submit" class="upload-submit" hidden>
+          Enviar
         </button>
-        <span class="vote-count">0</span>
-      </div>
-
-      <div class="photo-card" data-id="foto3">
-        <img src="images/59639379_2296333270686535_9144693647650848768_n.jpg" alt="Foto 3">
-        <button class="vote-btn" aria-label="Votar">
-          <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-        </button>
-        <span class="vote-count">0</span>
-      </div>
-
-    </div> <!-- FIN .photo-feed -->
-
-
-
-<form id="upload-form" class="upload-form minimal" action="/upload" method="POST" enctype="multipart/form-data">
-
-  <!-- INPUT OCULTO PERO FUNCIONAL -->
-  <input
-    id="upload-input"
-    class="upload-input"
-    type="file"
-    name="photo"
-    accept="image/*"
-    required
-    hidden
-  >
-
-  <!-- LABEL = BOTÓN VISIBLE -->
-  <label for="upload-input" id="upload-trigger" class="upload-trigger">
-    Pujar foto
-  </label>
-
-  <button type="submit" class="upload-submit" hidden>
-    Enviar
-  </button>
-</form>
-
-
-
+      </form>
+    </div>
   </div> <!-- FIN .feature__inner -->
 </section> <!-- FIN #concurs-fotos -->
 
@@ -234,6 +249,24 @@
   </div>
 </div>
 
+<!-- ======================
+     MODAL ERROR UPLOAD
+====================== -->
+<div id="error-modal" class="error-modal" aria-hidden="true">
+  <div id="error-modal-overlay" class="error-modal-overlay"></div>
+
+  <div class="error-modal-card" role="alertdialog" aria-modal="true" aria-labelledby="error-modal-title">
+    <button id="error-modal-close" class="error-modal-close" aria-label="Tancar">×</button>
+
+    <div class="error-modal-header">
+      <div class="error-badge" aria-hidden="true">!</div>
+      <div>
+        <h2 id="error-modal-title" class="error-modal-title">Error</h2>
+        <p id="error-modal-text" class="error-modal-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- =========================
      FULLSCREEN PHOTO VIEWER
@@ -250,7 +283,6 @@
   </figure>
 </div>
 
-
-
 </body>
 </html>
+

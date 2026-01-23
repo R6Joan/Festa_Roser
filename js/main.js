@@ -1,33 +1,28 @@
-// main.js
+﻿// main.js
 document.addEventListener('DOMContentLoaded', async () => {
   // ======================
-  // Scroll suave
+  // Scroll suave (robusto)
   // ======================
-// ======================
-// Scroll suave (robusto)
-// ======================
-document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
-  link.addEventListener('click', function (e) {
-    const href = this.getAttribute('href');
-    const id = href.split('#')[1];
+  document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
+    link.addEventListener('click', function (e) {
+      const href = this.getAttribute('href');
+      const id = href.split('#')[1];
 
-    if (!id) return;
+      if (!id) return;
 
-    const target = document.getElementById(id);
-    if (!target) return;
+      const target = document.getElementById(id);
+      if (!target) return;
 
-    e.preventDefault();
+      e.preventDefault();
 
-    target.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+
+      history.pushState(null, '', `#${id}`);
     });
-
-    // Mantiene el hash en la URL
-    history.pushState(null, '', `#${id}`);
   });
-});
-
 
   const socket = io();
 
@@ -36,18 +31,26 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
   // ======================
   const AFTER_LOGIN_KEY = 'afterLoginAction';
 
-  async function isLoggedIn() {
+  async function fetchCurrentUser() {
     try {
       const res = await fetch('/me', { method: 'GET' });
-      return res.ok; // 200 => logged, 401 => not
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.user || null;
     } catch (err) {
       console.error('Error comprovant login:', err);
-      return false;
+      return null;
     }
   }
 
-  // 🔹 Comprobamos una vez al cargar si el usuario está logueado
-  const initialLoggedIn = await isLoggedIn();
+  async function isLoggedIn() {
+    const user = await fetchCurrentUser();
+    if (user) currentUser = user;
+    return !!user;
+  }
+
+  let currentUser = await fetchCurrentUser();
+  const initialLoggedIn = !!currentUser;
   console.log('[AUTH] initialLoggedIn =', initialLoggedIn);
 
   // ======================
@@ -58,6 +61,10 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
   const loginModalClose = document.getElementById('login-modal-close');
   const loginGoogleBtn = document.getElementById('login-google-btn');
   const loginFacebookBtn = document.getElementById('login-facebook-btn');
+  const errorModal = document.getElementById('error-modal');
+  const errorModalOverlay = document.getElementById('error-modal-overlay');
+  const errorModalClose = document.getElementById('error-modal-close');
+  const errorModalText = document.getElementById('error-modal-text');
 
   function openLoginModal() {
     if (!loginModal) return;
@@ -71,16 +78,36 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
     document.body.style.overflow = '';
   }
 
+  function openErrorModal(message) {
+    if (!errorModal) {
+      if (message) alert(message);
+      return;
+    }
+    if (errorModalText) errorModalText.textContent = message || '';
+    errorModal.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeErrorModal() {
+    if (!errorModal) return;
+    errorModal.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+
   if (loginModalClose) loginModalClose.addEventListener('click', closeLoginModal);
   if (loginModalOverlay) loginModalOverlay.addEventListener('click', closeLoginModal);
+  if (errorModalClose) errorModalClose.addEventListener('click', closeErrorModal);
+  if (errorModalOverlay) errorModalOverlay.addEventListener('click', closeErrorModal);
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && loginModal?.classList.contains('visible')) {
       closeLoginModal();
     }
+    if (e.key === 'Escape' && errorModal?.classList.contains('visible')) {
+      closeErrorModal();
+    }
   });
 
-  // ✅ Ir a OAuth (la intención la marcamos fuera: upload o vote)
   function goAuth(provider) {
     window.location.href = provider === 'google' ? '/auth/google' : '/auth/facebook';
   }
@@ -135,7 +162,6 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
     const initialData = votesState[id] || { votes: 0, voted: false };
     renderCard(card, initialData);
 
-    // evitar duplicar listeners
     if (btn.dataset.bound === '1') return;
     btn.dataset.bound = '1';
 
@@ -189,51 +215,117 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
     });
   }
 
+  function isOwner(photo, user) {
+    if (!photo?.uploader || !user) return false;
+    const sameProvider = photo.uploader.provider === user.provider;
+    const sameId = photo.uploader.id && photo.uploader.id === user.id;
+    const legacySameName = !photo.uploader.id && photo.uploader.name === user.name;
+    return sameProvider && (sameId || legacySameName);
+  }
+
+  function attachDeleteToCard(card, photo) {
+    const btn = card.querySelector('.delete-btn');
+    if (!btn) return;
+    if (btn.dataset.bound === '1') return;
+    btn.dataset.bound = '1';
+
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!confirm('Vols esborrar aquesta foto?')) return;
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/photos/${photo.id}`, { method: 'DELETE' });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          console.error('Error esborrant:', data.error || res.statusText);
+          return;
+        }
+
+        window.location.reload();
+        return;
+      } catch (err) {
+        console.error('Error esborrant:', err);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  }
+
+  function buildDeleteButtonHtml(photo) {
+    if (!isOwner(photo, currentUser)) return '';
+    return '<button class="delete-btn" aria-label="Esborrar foto" title="Esborrar">×</button>';
+  }
+
   // ======================
   // Cargar galería desde /photos
   // ======================
   const feed = document.querySelector('.photo-feed');
+  const photoMoreBtn = document.getElementById('photo-more-btn');
+  const isDesktop = !window.matchMedia('(max-width: 48rem)').matches;
+  let hiddenPhotos = [];
+  let photosById = new Map();
+
+  function createPhotoCard(photo) {
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    card.dataset.id = photo.id;
+
+    card.innerHTML = `
+      <img src="${photo.src}" alt="Foto">
+      ${buildDeleteButtonHtml(photo)}
+      <button class="vote-btn" aria-label="Votar">
+        <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
+          a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+          1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </button>
+      <span class="vote-count">0</span>
+    `;
+
+    attachVoteToCard(card);
+    attachDeleteToCard(card, photo);
+    return card;
+  }
 
   if (feed) {
     try {
       const photosRes = await fetch('/photos');
       if (photosRes.ok) {
         const photos = await photosRes.json();
+        photos.forEach(p => photosById.set(p.id, p));
 
-        // limpiamos las cards del HTML (las 3 iniciales hardcodeadas)
         feed.innerHTML = '';
 
-        photos.forEach(photo => {
-          const card = document.createElement('div');
-          card.className = 'photo-card';
-          card.dataset.id = photo.id;
+        const visiblePhotos = (isDesktop && photos.length > 3) ? photos.slice(0, 3) : photos;
+        hiddenPhotos = (isDesktop && photos.length > 3) ? photos.slice(3) : [];
 
-          card.innerHTML = `
-            <img src="${photo.src}" alt="Foto">
-            <button class="vote-btn" aria-label="Votar">
-              <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
-                a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
-                1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-              </svg>
-            </button>
-            <span class="vote-count">0</span>
-          `;
-
-          feed.appendChild(card);
-          attachVoteToCard(card);
+        visiblePhotos.forEach(photo => {
+          feed.appendChild(createPhotoCard(photo));
         });
 
-        // ✅ Forzar que en móvil el carrusel empiece en la primera foto
-// ✅ Forzar que en móvil el carrusel empiece en la PRIMERA foto de verdad
+        if (photoMoreBtn) {
+          photoMoreBtn.hidden = hiddenPhotos.length === 0;
+          if (photoMoreBtn.dataset.bound !== '1') {
+            photoMoreBtn.dataset.bound = '1';
+            photoMoreBtn.addEventListener('click', () => {
+              hiddenPhotos.forEach(photo => feed.appendChild(createPhotoCard(photo)));
+              hiddenPhotos = [];
+              photoMoreBtn.hidden = true;
+            });
+          }
+        }
+
         if (window.matchMedia('(max-width: 48rem)').matches) {
           setTimeout(() => {
             const firstCard = feed.querySelector('.photo-card');
             if (!firstCard) return;
-
-            // Usamos offsetLeft para compensar márgenes/padding
             const offset = firstCard.offsetLeft;
             feed.scrollTo({ left: offset, behavior: 'auto' });
           }, 50);
@@ -247,7 +339,6 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
     }
   }
 
-  // Por si quedara alguna .photo-card suelta en el HTML
   document.querySelectorAll('.photo-card').forEach(card => attachVoteToCard(card));
 
   // ======================
@@ -264,47 +355,47 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
   });
 
   // ======================
-  // WebSocket: quan pugen una foto nova
+  // WebSocket: cuando suben una foto nueva
   // ======================
   socket.on('photoAdded', (photo) => {
     const feed = document.querySelector('.photo-feed');
     if (!feed) return;
 
-    const card = document.createElement('div');
-    card.className = 'photo-card';
-    card.dataset.id = photo.id;
-
-    card.innerHTML = `
-      <img src="${photo.src}" alt="Foto">
-      <button class="vote-btn" aria-label="Votar">
-        <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
-          a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
-          1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
-      </button>
-      <span class="vote-count">${photo.votes ?? 0}</span>
-    `;
+    photosById.set(photo.id, photo);
+    const card = createPhotoCard(photo);
+    const limitActive = isDesktop && hiddenPhotos.length > 0;
 
     feed.prepend(card);
 
+    if (limitActive && feed.children.length > 3) {
+      const lastCard = feed.children[feed.children.length - 1];
+      if (lastCard?.dataset?.id) {
+        const lastPhoto = photosById.get(lastCard.dataset.id);
+        hiddenPhotos.unshift(lastPhoto || { id: lastCard.dataset.id, src: lastCard.querySelector('img')?.src });
+      }
+      lastCard?.remove();
+      if (photoMoreBtn) photoMoreBtn.hidden = false;
+    }
+
     votesState[photo.id] = { votes: photo.votes ?? 0, voted: false };
-    attachVoteToCard(card);
   });
 
+  socket.on('photoDeleted', ({ id }) => {
+    const card = document.querySelector(`.photo-card[data-id="${id}"]`);
+    if (card) card.remove();
+    delete votesState[id];
+  });
 
   // ======================
   // Upload minimal + login check + after-login auto-open
   // ======================
+  const uploadForm = document.getElementById('upload-form');
   const uploadInput = document.getElementById('upload-input');
   const uploadTrigger = document.getElementById('upload-trigger');
   const uploadSubmit = document.querySelector('.upload-submit');
 
   console.log('[UPLOAD] init', { uploadInput: !!uploadInput, uploadTrigger: !!uploadTrigger });
 
-  // Si venimos de login con intención "upload", intentamos abrir selector
   const pendingAction = localStorage.getItem(AFTER_LOGIN_KEY);
   console.log('[UPLOAD] pendingAction:', pendingAction);
 
@@ -325,19 +416,14 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
       console.log('[UPLOAD] click on trigger, initialLoggedIn =', initialLoggedIn);
 
       if (!initialLoggedIn) {
-        // No estaba logeado cuando se cargó la página:
-        // bloqueamos el comportamiento del label (abrir selector)
         event.preventDefault();
         event.stopPropagation();
 
         console.log('[UPLOAD] not logged, opening login modal and setting afterLoginAction=upload');
         localStorage.setItem(AFTER_LOGIN_KEY, 'upload');
         openLoginModal();
-        return; // NO abrimos el selector
+        return;
       }
-
-      // Si sí estaba logeado al cargar, NO hacemos preventDefault:
-      // el <label for="upload-input"> abrirá el selector de forma nativa
     });
 
     uploadInput.addEventListener('change', () => {
@@ -355,6 +441,37 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
     console.warn('[UPLOAD] uploadTrigger or uploadInput not found in DOM');
   }
 
+  if (uploadForm) {
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const logged = await isLoggedIn();
+      if (!logged) {
+        localStorage.setItem(AFTER_LOGIN_KEY, 'upload');
+        openLoginModal();
+        return;
+      }
+
+      try {
+        const formData = new FormData(uploadForm);
+        const res = await fetch('/upload', { method: 'POST', body: formData });
+
+        if (res.ok) {
+          window.location.reload();
+          return;
+        }
+
+        const text = await res.text();
+        if (res.status === 413) {
+          openErrorModal('Arxiu massa pesat. Tamany màxim 10mb');
+        } else {
+          openErrorModal(text || 'Error al subir la foto.');
+        }
+      } catch (err) {
+        console.error('Error pujant foto:', err);
+        openErrorModal('Error al subir la foto.');
+      }
+    });
+  }
 
   // =============================
   // PHOTO VIEWER (delegation + swipe)
@@ -461,41 +578,35 @@ document.querySelectorAll('a[href*="#"]:not([href="#"])').forEach(link => {
   });
 
   // ======================
-// Igualar altura de TODAS las cards al máximo (global)
-// ======================
-function equalizeCardHeights() {
-  const cards = document.querySelectorAll('.cards .card');
-  if (!cards.length) return;
+  // Igualar altura de TODAS las cards al máximo (global)
+  // ======================
+  function equalizeCardHeights() {
+    const cards = document.querySelectorAll('.cards .card');
+    if (!cards.length) return;
 
-  // reset para medir natural
-  cards.forEach(card => {
-    card.style.height = 'auto';
+    cards.forEach(card => {
+      card.style.height = 'auto';
+    });
+
+    let max = 0;
+    cards.forEach(card => {
+      const h = card.getBoundingClientRect().height;
+      if (h > max) max = h;
+    });
+
+    cards.forEach(card => {
+      card.style.height = `${Math.ceil(max)}px`;
+    });
+  }
+
+  equalizeCardHeights();
+
+  let eqT;
+  window.addEventListener('resize', () => {
+    clearTimeout(eqT);
+    eqT = setTimeout(equalizeCardHeights, 150);
   });
 
-  // medir máximo
-  let max = 0;
-  cards.forEach(card => {
-    const h = card.getBoundingClientRect().height;
-    if (h > max) max = h;
-  });
-
-  // aplicar máximo a todas
-  cards.forEach(card => {
-    card.style.height = `${Math.ceil(max)}px`;
-  });
-}
-
-// al cargar
-equalizeCardHeights();
-
-// en resize/orientación (debounce)
-let eqT;
-window.addEventListener('resize', () => {
-  clearTimeout(eqT);
-  eqT = setTimeout(equalizeCardHeights, 150);
-});
-
-// si se cargan imágenes después, recalcula
-window.addEventListener('load', equalizeCardHeights);
+  window.addEventListener('load', equalizeCardHeights);
 
 });

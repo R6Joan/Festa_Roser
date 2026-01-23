@@ -1,0 +1,123 @@
+﻿/* ======================
+   MODAL ERROR UPLOAD
+   ====================== */
+
+.error-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 9999;
+}
+
+.error-modal.visible {
+  display: block;
+}
+
+.error-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+}
+
+.error-modal-card {
+  position: relative;
+  width: min(520px, calc(100% - 2rem));
+  margin: 12vh auto;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--lime-moss);
+  color: #fff;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  padding: 22px;
+  transform: translateY(10px);
+  opacity: 0;
+  animation: errorModalIn 180ms ease-out forwards;
+}
+
+@keyframes errorModalIn {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.error-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.9;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.error-modal-close:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.error-modal-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.error-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.error-modal-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.error-modal-text {
+  margin: 6px 0 0 0;
+  line-height: 1.35;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 30rem) {
+  .error-modal-card {
+    width: min(92vw, 32rem);
+    margin: 12vh auto 2vh;
+    padding: clamp(1rem, 4vw, 1.4rem);
+    border-radius: 1.2rem;
+  }
+
+  .error-modal-header {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .error-badge {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.9rem;
+  }
+
+  .error-modal-title {
+    font-size: clamp(1.05rem, 4vw, 1.2rem);
+  }
+
+  .error-modal-text {
+    font-size: clamp(0.9rem, 3.5vw, 0.98rem);
+  }
+
+  .error-modal-close {
+    font-size: 1.8rem;
+  }
+}
